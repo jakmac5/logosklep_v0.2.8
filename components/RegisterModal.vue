@@ -128,7 +128,7 @@ export default {
         this.$store
           .dispatch('users/register', this.account)
           .then(() => {
-            location.href = '/'
+          //  location.href = '/'
 })
           .catch((error) => {
             this.isError = true

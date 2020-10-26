@@ -1,5 +1,5 @@
 import { auth , db } from '@/plugins/firebase'
-
+/*
 export default (context:any) => {
   const { store } = context
 
@@ -25,3 +25,4 @@ export default (context:any) => {
     })
   })
 }
+*/

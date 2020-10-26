@@ -24,8 +24,10 @@ export const actions = {
 
     if (decoded) {
       commit('users/SET_USER', {
-        uid: decoded.user_id,
+        id: decoded.user_id,
         email: decoded.email,
+        username: decoded.displayName,
+        choice: decoded.choice
       })
     }
   },

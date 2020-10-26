@@ -49,7 +49,7 @@
 import logoIcon from '@/components/Logo.vue'
 import RegisterModal from '@/components/RegisterModal.vue'
 import LoginModal from '@/components/LoginModal.vue'
-import { auth } from '@/plugins/firebase'
+import { auth,db } from '@/plugins/firebase'
 import Cookie from 'js-cookie'
 
 export default {
@@ -69,9 +69,10 @@ export default {
     user_info(newVal,old) {
       console.log(newVal)
       if(newVal.userId){
-        if(!newVal.username){
-          alert("watched")
+        if(newVal.choice===null){
+          console.log("watched choice is null")
         }
+        else console.log("watched choice is not null")
       }
     }
   },

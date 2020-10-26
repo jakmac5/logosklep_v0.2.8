@@ -38,11 +38,20 @@ export const actions = {
       const token = await auth.currentUser.getIdToken()
       const { email, uid } = auth.currentUser
       const nick= auth.currentUser.displayName
+      console.log(uid)
+      const choices = await db.collection('users').where('userId','==',uid).get()
+      let choice = null
+      if(!choices.empty){
+        choices.forEach(data => {
+          choice = data.data().choice
+        })
+      }
       // Set JWT to the cookie
       Cookie.set('access_token', token)
       commit('setLoading', false)
       // Set the user locally
-      commit('SET_USER', { email, uid,nick })
+      let id =uid
+      commit('SET_USER', { email, id,nick,choice })
       console.log("commited login")
     } catch (error) {
       commit('setLoading', false)
@@ -63,9 +72,14 @@ export const actions = {
         .then(userCredential=> {
           commit("setLoading", false);
           
-          const user = userCredential.user;  // <-- Here is the main change 
-          
-          auth.currentUser.getIdToken().then((token) =>{
+          const user_auth = userCredential.user;  // <-- Here is the main change 
+         
+          user_auth.updateProfile({ 
+            displayName:account.displayName
+
+          })
+          user_auth.getIdToken().then((token) =>{
+            console.log('cookie token accesed')
             Cookie.set('access_token', token)
             
           })
@@ -73,19 +87,19 @@ export const actions = {
           commit('setLoading', false)
           
           const newUser = {
-            email: user.email,
-            id: user.uid,
+            email: user_auth.email,
+            id: user_auth.uid,
             choice: account.choices,
             username: account.displayName
           };
-          console.log(newUser)
+          console.log("obiekt w store do SET_USER: ",newUser)
           commit("SET_USER", newUser);
           
           return db.collection("users")
           .add({
             username: account.displayName,
-            email: user.email,
-            userId: user.uid,
+            email: user_auth.email,
+            userId: user_auth.uid,
             choice: account.choices
           });
           

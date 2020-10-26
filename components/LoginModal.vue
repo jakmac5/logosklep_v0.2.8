@@ -26,7 +26,7 @@
             <b-field label="Email">
               <b-input
                 type="email"
-                :value="account.email"
+                v-model="account.email"
                 placeholder="Twój email"
                 required
               >
@@ -36,7 +36,7 @@
             <b-field label="Hasło">
               <b-input
                 type="password"
-                :value="account.password"
+                v-model="account.password"
                 placeholder="Twoje hasło"
                 required
               >
@@ -88,15 +88,19 @@ export default {
         .dispatch('users/login', this.account).catch(function(error) {
         if (error.code == "auth/user-not-found") {
             this.isComponentModalActive=true
+            this.wrongLogin+=1
         }
         else this.wrongLogin=0
         })
         .then(() => {
-          if (this.isComponentModalActive) {
-          this.wrongLogin+=1
+          
+          if (this.wrongLogin>0) {
+                        this.isComponentModalActive=true
+
           }
           else{
-            this.wrongLogin=0
+            this.isComponentModalActive=false
+
             location.href = '/profile'
           }
         })
