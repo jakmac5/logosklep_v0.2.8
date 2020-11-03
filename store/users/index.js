@@ -15,7 +15,7 @@ export const mutations = {
   update_email:(state,email)=>{
 state.user.email = email
   },
-  setLoading(state, payload) {
+ setLoading(state, payload) { 
     state.loading = payload
   },
   setError(state, payload) {
@@ -95,7 +95,7 @@ export const actions = {
           console.log("obiekt w store do SET_USER: ",newUser)
           commit("SET_USER", newUser);
           
-          return db.collection("users")
+          return db.collection(account.choices)
           .add({
             username: account.displayName,
             email: user_auth.email,
