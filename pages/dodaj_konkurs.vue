@@ -1,10 +1,11 @@
 <template>
   <section>
-         
-    
-    
-    <b-steps v-model="activeStep" :has-navigation="false" type="is-black" mobile-mode="compact">
-
+    <b-steps
+      v-model="activeStep"
+      :has-navigation="false"
+      type="is-black"
+      mobile-mode="compact"
+    >
       <b-step-item :clickable="true" step="1" label="Design">
         Design: zacznijmy od określenia designów, które lubisz. Pomożesz
         grafikowi zrozumieć jaki styl lubisz.
@@ -112,22 +113,37 @@
         Jakie kolory preferujesz?
       </b-step-item>
       <b-step-item :clickable="true" step="4" label="Informacje">
-        Uzupełnij formularz
+        Autor: {{ user.email }} Podaj czas trwania konkursu
+        <input v-model="dni" /> Podaj nazwe <input v-model="nazwa" /> Podaj opis
+        <input v-model="opis" />
+        <section>
+          <p class="content"><b>selected</b>: {{ kategoria }}</p>
+          <b-field>
+            <b-select multiple native-size="8" v-model="kategoria">
+              <option value="Strona internetowa">Strona internetowa</option>
+              <option value="Baner">Baner</option>
+              <option value="Logo">Logo</option>
+              <option value="Inne">Inne</option>
+            </b-select>
+          </b-field>
+        </section>
       </b-step-item>
       <b-step-item :clickable="true" step="5" label="Płatność">
-        Text here
+        Podaj cene <input v-model="cena" />
+        <section>
+          <b-button @click="getdate">Click Me</b-button>
+        </section>
       </b-step-item>
     </b-steps>
     <div id="footer-new">
-        {{activeStep+1}}
+      {{ activeStep + 1 }}
     </div>
-
   </section>
 </template>
 
 <script>
 // created, destroyed and handleResize() is for screen width - currently not in use
-
+import { db } from '@/plugins/firebase'
 
 export default {
   data() {
@@ -140,38 +156,73 @@ export default {
       economical: 50,
       geometric: 50,
       abstract: 50,
-      width: 0
+      width: 0,
+      dni: 0,
+      kategoria: [],
+      nazwa: '',
+      opis: '',
+      cena: 0,
     }
   },
   // there is better way than process.browser (plugin way)?
-    created() {
-        if(process.browser){
-            window.addEventListener('resize', this.handleResize);
-            this.handleResize();
+  created() {
+    if (process.browser) {
+      window.addEventListener('resize', this.handleResize)
+      this.handleResize()
+    }
+  },
+  destroyed() {
+    if (process.browser) {
+      window.removeEventListener('resize', this.handleResize)
+    }
+  },
 
-        }
-    },
-    destroyed() {
-        if(process.browser){
-            
-            window.removeEventListener('resize', this.handleResize);
-        }
-    },
-    
   methods: {
-      handleResize() {
-          if(process.browser){
-            
-              this.width = window.innerWidth;
-        }
-        },
+    UploadNew(cena, dni, data, autor, nazwa, opis, kategoria) {
+      let testcollection = db.collection('test_upload_konkurs') // unikatowa nazwa dokumentu change name to autor
+
+      testcollection.add({
+        // time
+        // konkurs_id: db.collection('test_upload_konkurs').doc().id,
+        cena: cena,
+        dni: dni,
+        czas: data,
+        autor: autor,
+        nazwa: nazwa,
+        opis_html: opis,
+        kategoria: kategoria,
+      })
+    },
+    getdate() {
+      let currentDate = new Date()
+      //alert(currentDate)
+      let currentDateWithFormat = new Date()
+        .toJSON()
+        .slice(0, 10)
+        .replace(/-/g, '/')
+      console.log(currentDateWithFormat)
+      this.UploadNew(
+        this.cena,
+        this.dni,
+        currentDateWithFormat,
+        this.user.email,
+        this.nazwa,
+        this.opis,
+        this.kategoria
+      )
+    },
+    handleResize() {
+      if (process.browser) {
+        this.width = window.innerWidth
+      }
+    },
     addclassic() {
       if (this.classicmodern <= 10) this.classicmodern = 0
-      else this.classicmodern -= 10 
+      else this.classicmodern -= 10
     },
     addmodern() {
       if (this.classicmodern >= 90) this.classicmodern = 100
-      else this.classicmodern += 10  
+      else this.classicmodern += 10
     },
     addmature() {
       if (this.mature <= 10) this.mature = 0
@@ -223,9 +274,14 @@ export default {
     },
   },
   computed: {
-    screenwidth(){
-        if (this.window.innerWidth < 769) return true
+    screenwidth() {
+      if (this.window.innerWidth < 769) return true
     },
+
+    user() {
+      return this.$store.getters['users/getUser']
+    },
+
     baseSteps() {
       return [
         {
@@ -267,11 +323,11 @@ export default {
 
 <style scoped>
 #footer-new {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: grey;
-    height: 50px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: grey;
+  height: 50px;
 }
 
 .container {
@@ -312,14 +368,12 @@ input {
   cursor: pointer;
 }
 
-
-
 .icon-button-left {
-    float: left;
+  float: left;
 }
 
 .icon-button-right {
-    float: left;
+  float: left;
 }
 
 .Opis {

@@ -1,6 +1,7 @@
 <template>
   <div class="hp">
     <h1>home page</h1>
+    <NewFileUpl />
     <div class="fill"></div>
     <div class="bottom"></div>
 
@@ -12,12 +13,13 @@
 
 <script>
 import ListaOgloszen from '@/components/ListaOgloszen.vue'
+import NewFileUpl from '@/components/FileUploadNew.vue'
 
 export default {
   components: {
     ListaOgloszen,
+    NewFileUpl,
   },
-
 }
 </script>
 
