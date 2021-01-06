@@ -13,7 +13,7 @@
 <script>
 let uuid = require('uuid')
 import { storage } from '@/plugins/firebase'
-
+import { db } from '@/plugins/firebase'
 export default {
   data() {
     return {
@@ -31,21 +31,21 @@ export default {
       this.createImage(files[0])
     },
     createImage(file) {
-      var image = new Image()
-      var reader = new FileReader()
-      var vm = this
+      let image = new Image()
+      let reader = new FileReader()
+      let vm = this
 
       reader.onload = (e) => {
         vm.image = e.target.result
       }
       reader.readAsDataURL(file)
-      this.afterComplete(file)
+      this.afterComplete(file,this.dbccol,this.dbdoc)
     },
     removeImage: function (e) {
       this.image = ''
     },
 
-    async afterComplete(upload) {
+    async afterComplete(upload,dbcol,dbdoc) {
       let imageName = uuid.v1()
       this.isLoading = true
       try {
@@ -61,13 +61,31 @@ export default {
         await imageRef.put(file, metadata)
         let downloadURL = await imageRef.getDownloadURL()
 
-        db.collection(dbcol)
-          .doc(dbdoc)
+const usersRef = db.collection(this.dbcol).doc(this.dbdoc)
+
+usersRef.get()
+  .then((docSnapshot) => {
+    if (docSnapshot.exists) {
+      usersRef.onSnapshot((doc) => {
+        db.collection(this.dbcol)
+          .doc(this.dbdoc)
           .update({
             prace_links: [downloadURL, ...prace_links],
           })
+      });
+    } else {
+ 
+ db.collection(this.dbcol)
+          .doc(this.dbdoc)
+          .set({
+            prace_links: [downloadURL],
+          })
+}
+});
 
-        this.images.push({ src: downloadURL })
+
+
+//        this.images.push({ src: downloadURL })
       } catch (error) {
         console.log(error)
       }

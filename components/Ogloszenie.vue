@@ -8,7 +8,7 @@
       dbcol="test_upload_konkurs"
       :dbdoc="$route.params.id"
     />
-    <p>Liczba aktywnych konkursów: {{ urls_to_go.length }}</p>
+    <p>Liczba prac w konkursie: {{ urls_to_go.length }}</p>
 
     <div class="columns" v-for="(logos, i) in chunkedLogos" :key="logos.index">
       <div
@@ -18,13 +18,15 @@
         v-for="(logo, j) in logos"
         :key="logo.index"
       >
+        <div class="box">
         <figure class="element" v-if="hover[0] == i && hover[1] == j">
-          <Heart />
-
           <img :src="logo" @click="Like()" title="Like me" />
+        <div class="text">
+          <Heart />
+        </div>
         </figure>
-
         <img v-else :src="logo" title="Like me" />
+        </div>
       </div>
     </div>
   </div>
@@ -113,4 +115,19 @@ export default Vue.extend({
 .element {
   cursor: pointer;
 }
+    .box{
+        position: relative;
+        display: inline-block; /* Make the width of box same as image */
+    }
+    .box .text{
+        position: absolute;
+        z-index: 999;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 40%; /* Adjust this value to move the positioned div up and down */
+        text-align: center;
+        width: 60%; /* Set the width of the positioned div */
+    }
+
 </style>

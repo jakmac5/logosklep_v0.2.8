@@ -37,13 +37,15 @@ export const actions = {
       // Get JWT from Firebase
       const token = await auth.currentUser.getIdToken()
       const { email, uid } = auth.currentUser
-      const nick= auth.currentUser.displayName
+      //const nick= auth.currentUser.displayName
       console.log(uid)
       const choices = await db.collection('users').where('userId','==',uid).get()
-      let choice = null
+      let choice = ''
+      let username = ''
       if(!choices.empty){
         choices.forEach(data => {
-          choice = data.data().choice
+          this.choice = data.data().choice
+          this.username = data.data().username
         })
       }
       // Set JWT to the cookie
@@ -51,7 +53,8 @@ export const actions = {
       commit('setLoading', false)
       // Set the user locally
       let id =uid
-      commit('SET_USER', { email, id,nick,choice })
+      console.log(username, choice)
+      commit('SET_USER', { email, id,username,choice })
       console.log("commited login")
     } catch (error) {
       commit('setLoading', false)
