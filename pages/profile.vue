@@ -172,7 +172,7 @@ import {
 import FileUploadNew from '@/components/FileUploadNew.vue'
 import _ from 'lodash'
 import {storage} from '@/plugins/firebase'
-import Portfolio from '@/components/portfolio'
+import Portfolio from '@/components/Portfolio.vue'
 
 export default {
   components: {

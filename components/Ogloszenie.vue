@@ -63,7 +63,7 @@ export default Vue.extend({
       return _.chunk(this.urls_to_go, 3)
     },
   },
-  created() {
+  mounted() {
     console.log(this.$route.params.id)
     this.getKonkursInfo(this.$route.params.id)
     // Now we get the references of these images

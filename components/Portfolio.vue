@@ -1,5 +1,5 @@
 <template>
-    <div class="portfolio">
+    <div class="portfolio-display">
     <div class="columns" v-for="(logos) in chunkedLogos" :key="logos.index">
       <div
         class="column"
@@ -19,6 +19,7 @@ import {db} from '@/plugins/firebase'
 import {storage} from '@/plugins/firebase'
 
     export default {
+        name:'portfolio-display',
         data(){
             return {
                 urls_to_go:[],
@@ -32,7 +33,7 @@ import {storage} from '@/plugins/firebase'
             },
         },
         
-created() {
+mounted() {
 this.sync_portfolio()
 },
   methods: {
