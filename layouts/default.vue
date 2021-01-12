@@ -3,7 +3,7 @@
     
     <div class="navbar-user">
       <div class="is-pulled-right" v-if="userIsAuthenticated()">
-        <nuxt-link to="profile">
+        <nuxt-link :to="{path: '/profile'}"> 
           <a class="profile-text has-text-black">Profil</a>
         </nuxt-link>
         <a class="profile-text has-text-black" @click="logout"> Wyloguj się</a>

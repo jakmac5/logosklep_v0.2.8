@@ -1,7 +1,7 @@
 <template>
   <div id="ListaOgloszen">
 
-    <p>LISTA OGLOSZEN {{ ogloszenia.count }}</p>
+    <h3 class="title is-3">LICZBA AKTYWNYCH OGLOSZEN: {{ ogloszenia.count }}</h3>
     
     
     <section>
@@ -43,8 +43,11 @@
                 </a>
                 <a class="card-footer-item">
                     <template v-if="!loading">
+                       <nuxt-link
+          :to="{ path: '/graficy/' + ogloszenia.lista[index].autor }"
+          class="nav-link">
 Autor: {{ ogloszenia.lista[index].autor }}
-
+                       </nuxt-link>
                     </template>
                     <b-skeleton size="is-large" :active="loading"></b-skeleton>
                 </a>
@@ -76,7 +79,7 @@ export default Vue.extend({
     return {
       ogloszenia: [],
       loading: true,
-      iterations: [1,2,3,4,5]
+      iterations: [1,2,3,4,5] // quality code
     }
   },
 /*

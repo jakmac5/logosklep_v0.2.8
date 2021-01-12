@@ -126,24 +126,12 @@
         :clickable="isStepsClickable"
         :type="{ 'is-success': isProfileSuccess }"
         >
-        <div>
       <FileUploadNew
        :bucket_path="user.id"
       dbcol='portfolio'
       :dbdoc="user.id"
       />
-      
-    <div class="columns" v-for="(logos) in chunkedLogos" :key="logos.index">
-      <div
-        class="column"
-        v-for="(logo) in logos"
-        :key="logo.index"
-      >
-<img :src="logo" />
-      </div>
-
-      </div>
-        </div>
+        <Portfolio :username="user.id" />
       </b-step-item>
       <template
         v-if="customNavigation"
@@ -184,12 +172,14 @@ import {
 import FileUploadNew from '@/components/FileUploadNew.vue'
 import _ from 'lodash'
 import {storage} from '@/plugins/firebase'
+import Portfolio from '@/components/portfolio'
 
 export default {
   components: {
     ValidationObserver,
     ValidationProvider,
-    FileUploadNew
+    FileUploadNew,
+    Portfolio
   },
   data() {
     return {
@@ -210,44 +200,14 @@ export default {
       mobileMode: 'minimalist',
 
       email: '',
-
-      urls_to_go:[],
     }
   },
   computed: {
     user() {
       return this.$store.getters['users/getUser']
     },
-    chunkedLogos() {
-      return _.chunk(this.urls_to_go, 4)
-    },
   },
-created() {
-console.log(this.user.id)
-this.loadPortfolio(this.user.id)
-},
   methods: {
-    loadPortfolio(userid){
-            this.urls_to_go = []
-      let storageRef = storage.ref(userid)
-      storageRef.listAll().then((result) => {
-        try {
-          result.items.forEach((imageRef) => {
-            // And finally display them
-            imageRef.getDownloadURL().then((url) => {
-              this.urls_to_go.push(url)
-            })
-
-            imageRef.getMetadata().then((meta) => {
-              console.log('meta: ', meta)
-            })
-          })
-        } catch (err) {
-          console.log('catched :   ', err)
-        }
-      })
-      console.log(this.urls_to_go)
-    },
     updateProfile() {
       this.authUser.updateProfile({
         displayName: this.displayName,

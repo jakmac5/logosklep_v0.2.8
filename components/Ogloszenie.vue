@@ -1,5 +1,5 @@
 <template>
-  <div id="Ogloszenie">
+  <div id="Ogloszenie" v-if="firebase_error===false">
     <p>bucket path: {{ $route.params.id }}</p>
     <p>NAZWA OGLOSZENIA {{ ogloszenia.nazwa }}</p>
     <div v-html="ogloszenia.opis_html">fgdfgdghfdfg</div>
@@ -55,6 +55,7 @@ export default Vue.extend({
       error: null,
       post: null,
       hover: false,
+      firebase_error: false,
     }
   },
   computed: {
@@ -69,6 +70,7 @@ export default Vue.extend({
   },
   methods: {
     getKonkursInfo(konkursId) {
+      try{
       db.collection('test_upload_konkurs')
         .doc(konkursId)
         .onSnapshot((snapshot) => {
@@ -79,12 +81,21 @@ export default Vue.extend({
           } else {
             // snapshot.data() will be undefined in this case
             console.log('No such document!')
+          
           }
         })
 
       this.urls_to_go = []
-      let storageRef = storage.ref(konkursId)
-      storageRef.listAll().then((result) => {
+
+        let storageRef = storage.ref(konkursId)
+        if (!storageRef.exists){
+          return
+        }
+      storageRef.listAll().then((result,reject) => {
+        function reject(error){
+          console.log(error)
+          return
+        }
         try {
           result.items.forEach((imageRef) => {
             // And finally display them
@@ -101,6 +112,11 @@ export default Vue.extend({
         }
         console.log(this.urls_to_go)
       })
+          }
+          catch(err){
+            console.log(err)
+            this.firebase_error=true
+          }
     },
   },
 })
