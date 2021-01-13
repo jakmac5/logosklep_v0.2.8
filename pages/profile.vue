@@ -71,6 +71,8 @@
         <div>
           <h1>Hello {{ user.email }}</h1>
           <h1>Hello user.name {{ user.name }}</h1>
+          <h1>Upload profile picture:</h1>
+          <FileUploadNew :bucket_path="user.id+'profile-picture'" dbcol="users" dbdoc="" :dbparam="user.id" />
           <img :src="user.photoURL" height="150" />
           <p>
             👩‍🍳 Hi, {{ user.displayName || 'friend' }} we know you like
@@ -208,6 +210,7 @@ export default {
     },
   },
   methods: {
+    
     updateProfile() {
       this.authUser.updateProfile({
         displayName: this.displayName,

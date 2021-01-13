@@ -20,7 +20,7 @@ export default {
       image: '',
     }
   },
-  props: ['bucket_path', 'dbdoc', 'dbcol'],
+  props: ['bucket_path', 'dbdoc', 'dbcol', 'dbparam'],
   methods: {
     chooseFiles() {
       document.getElementById('fileUpload').click()
@@ -61,7 +61,25 @@ export default {
         await imageRef.put(file, metadata)
         let downloadURL = await imageRef.getDownloadURL()
 
-const usersRef = db.collection(this.dbcol).doc(this.dbdoc)
+if (!this.dbparam.empty) { // istnieje dbparam
+console.log("this dbpara: ", this.dbparam)
+  const queryref = db.collection('users').where('userId','==',this.dbparam.toString())
+  const snapshot = await queryref.get()
+  if (snapshot.empty){
+    console.log('username profile picture not found')
+  }
+  else{ 
+    snapshot.forEach(doc => {
+    //  const userquery = doc.data()
+      doc.ref.update({
+        profile_picture: downloadURL
+      })
+}); 
+  }
+}
+else{ 
+
+  const usersRef = db.collection(this.dbcol).doc(this.dbdoc)
 
 usersRef.get()
   .then((docSnapshot) => {
@@ -74,14 +92,15 @@ usersRef.get()
           })
       });
     } else {
- 
- db.collection(this.dbcol)
+      
+      db.collection(this.dbcol)
           .doc(this.dbdoc)
           .set({
             prace_links: [downloadURL],
           })
 }
 });
+            }
 
 
 

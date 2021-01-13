@@ -37,6 +37,11 @@
           <p class="level-item has-text-centered has-text-white">About</p>
         </nuxt-link>
       </div>
+            <div>
+        <nuxt-link to="graficy">
+          <p class="level-item has-text-centered has-text-white">Graficy</p>
+        </nuxt-link>
+      </div>
       <LoginModal />
       <RegisterModal />
     </nav>

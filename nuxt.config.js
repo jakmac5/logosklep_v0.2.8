@@ -1,4 +1,10 @@
+import shrinkRay from 'shrink-ray-current' // check if uninstall of this will cause any diffrent performance after deployment
+
+
 export default {
+  render: {                           // and this /\
+    compressor: shrinkRay()
+  },
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: 'logosklep',
