@@ -39,7 +39,7 @@ import Vue from 'vue'
 import { db } from '@/plugins/firebase'
 import FileUploadNew from '@/components/FileUploadNew.vue'
 import { storage } from '@/plugins/firebase'
-import Heart from '@/components/Heart.vue'
+import Heart from '@/assets/Heart.vue'
 import _ from 'lodash'
 
 //console.log(storageRef)
@@ -88,9 +88,12 @@ export default Vue.extend({
       this.urls_to_go = []
 
         let storageRef = storage.ref(konkursId)
+        /*
         if (!storageRef.exists){
+          console.log('no such storage')
           return
         }
+        */
       storageRef.listAll().then((result,reject) => {
         function reject(error){
           console.log(error)

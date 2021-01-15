@@ -1,17 +1,27 @@
 <template>
   <div id="app">
     
-    <div class="navbar-user">
-      <div class="is-pulled-right" v-if="userIsAuthenticated()">
+    <div class="navbar is-primary">
+
+      <div class="navbar-end" v-if="userIsAuthenticated()">
+        <div class="navbar-item">
+        <NotificationBell :notif_num="1"/>
+        </div>
+        <div class="navbar-item">
         <nuxt-link :to="{path: '/profile'}"> 
-          <a class="profile-text has-text-black">Profil</a>
+          <Profile />
         </nuxt-link>
-        <a class="profile-text has-text-black" @click="logout"> Wyloguj się</a>
+        </div>
+        <div class="navbar-item" @click="logout()">
+        <Logout  />
+        </div>
       </div>
       <div v-else>
         <a> User is logged out</a>
-      </div>
     </div>
+      </div>
+       
+    
     
 
     <div class="columns is-mobile is-multiline is-centered is-vcentered">
@@ -56,12 +66,18 @@ import RegisterModal from '@/components/RegisterModal.vue'
 import LoginModal from '@/components/LoginModal.vue'
 import { auth,db } from '@/plugins/firebase'
 import Cookie from 'js-cookie'
+import NotificationBell from '@/assets/NotificationBell.vue'
+import Logout from '@/assets/Logout.vue'
+import Profile from '@/assets/Profile.vue'
 
 export default {
   components: {
     logoIcon,
     RegisterModal,
     LoginModal,
+    NotificationBell,
+    Logout,
+    Profile
   },
 
   computed:{
@@ -110,6 +126,12 @@ confirm() {
 </script>
 
 <style scoped>
+
+#rightcorner{
+  padding:10px;
+  float: left;
+}
+
 .profile-text {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
@@ -129,7 +151,7 @@ body {
 .columns {
   margin: 0 !important;
 }
-.navbar-user {
+.navbar-user { /* navbar */
   background-color: #64d2b8;
   height: 56px;
 }

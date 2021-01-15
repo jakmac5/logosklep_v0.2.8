@@ -133,7 +133,8 @@
       dbcol='portfolio'
       :dbdoc="user.id"
       />
-        <Portfolio :username="user.id" />
+        <PortfolioWithClick :username="user.id" />
+
       </b-step-item>
       <template
         v-if="customNavigation"
@@ -210,7 +211,10 @@ export default {
     },
   },
   methods: {
-    
+    selectedToDisplay(){
+// push 3 photo to db
+
+    },
     updateProfile() {
       this.authUser.updateProfile({
         displayName: this.displayName,

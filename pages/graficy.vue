@@ -8,11 +8,13 @@
         v-bind:key="index"
       >
       <div class="card">
-  <div class="card-image">
-    <figure class="image is-4by3">
-      <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-    </figure>
-  </div>
+{{interval}}
+  <b-carousel  :pause-info="false" :repeat="true" :pause-hover="false" :autoplay="autoplay[index]" :interval="interval[index]"  >
+        <b-carousel-item v-for="(carousel, i) in carousels" :key="i" >
+           <img v-on:mouseover="mouseover(index)"
+    v-on:mouseleave="mouseleave(index)" :src="carousel.url">
+        </b-carousel-item>
+    </b-carousel>
   <div class="card-content">
     <div class="media">
       <div class="media-left">
@@ -42,18 +44,35 @@
 
 <script>
 import {db} from '@/plugins/firebase'
+import Vue from 'vue'
 // jak wyswietlac grafikow? 
 
 // na start tych co maja prace w portfolio w
 // potem tych co maja prace w portfolio i brali udzial w konkursie / zaplacili / wygrali konkurs
 
-    export default {
+
+// zmienic interval na pierwszym wyswietlanym zdjeciu na 0 a potem 2000
+    export default 
+    Vue.extend({
         data(){
             return {
                 graficy:[],
+                   carousels: [
+                { text: 'Slide 1', url: 'https://firebasestorage.googleapis.com/v0/b/grfikapp.appspot.com/o/Wqv3eSBiulTMBoiLlVdDuPXsVA22%2F00119530-4ffb-11eb-b38d-0d9514ffb46b.png?alt=media&token=fb403c76-f579-4f99-ab23-b6526b4cc92a' },
+                { text: 'Slide 2', url: 'https://firebasestorage.googleapis.com/v0/b/grfikapp.appspot.com/o/Wqv3eSBiulTMBoiLlVdDuPXsVA22%2F00119530-4ffb-11eb-b38d-0d9514ffb46b.png?alt=media&token=fb403c76-f579-4f99-ab23-b6526b4cc92a' },
+                { text: 'Slide 3', url: 'https://firebasestorage.googleapis.com/v0/b/grfikapp.appspot.com/o/Wqv3eSBiulTMBoiLlVdDuPXsVA22%2F00119530-4ffb-11eb-b38d-0d9514ffb46b.png?alt=media&token=fb403c76-f579-4f99-ab23-b6526b4cc92a' },
+            ],
+            autoplay: [false, false, false],
+            interval:[1880,1880,1880],
             }
         },
         methods:{
+              mouseover: function(i){
+      Vue.set(this.autoplay,i,true)        
+    },    
+    mouseleave: function(i){
+      Vue.set(this.autoplay,i,false)
+    },
             async getBestUsers(){
                 const snapshot = await db.collection('users').where('choice','==','Grafik').limit(3).get()
                 if(snapshot.empty){
@@ -64,15 +83,14 @@ import {db} from '@/plugins/firebase'
                         this.graficy.push(doc.data())
                     })
                 }
-
 }
         },
         mounted(){
             this.getBestUsers()
         },
-    }
+    })
 </script>
 
 <style scoped>
 
-</style>
+</style> 
